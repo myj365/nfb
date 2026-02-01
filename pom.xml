@@ -8,11 +8,6 @@
     <artifactId>nfb</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <description>
-        nfb是novel file builder的简写，就是小说文件构建器。
-        本项目用于将小说生成电子书格式的文件，暂定支持epub3、fb2
-    </description>
-
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>

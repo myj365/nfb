@@ -1,7 +1,6 @@
 package plus.myj.nfb;
 
 import plus.myj.nfb.builder.Builder;
-import plus.myj.nfb.builder.entity.DepthLevel;
 import plus.myj.nfb.builder.epub2.Epub2Builder;
 import plus.myj.nfb.builder.epub3.Epub3Builder;
 import plus.myj.nfb.builder.fb2.Fb2Builder;
