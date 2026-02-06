@@ -55,7 +55,7 @@ public class Nfb {
     private static void checkDepth(List<Chapter> chapters, int depth) {
         if (chapters != null) {
             if (depth > 5) {
-                throw new RuntimeException("章节深度不得超过5层， 当前检测到深度" + depth);
+                throw new RuntimeException("章节深度不得超过5层，当前检测到深度" + depth);
             }
 
             for (Chapter chapter : chapters) {
