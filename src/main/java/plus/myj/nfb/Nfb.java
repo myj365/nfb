@@ -5,6 +5,7 @@ import plus.myj.nfb.builder.epub2.Epub2Builder;
 import plus.myj.nfb.builder.epub3.Epub3Builder;
 import plus.myj.nfb.builder.fb2.Fb2Builder;
 import plus.myj.nfb.builder.fb2zip.Fb2ZipBuilder;
+import plus.myj.nfb.builder.markdown.MarkDownBuilder;
 import plus.myj.nfb.builder.txt.TxtBuilder;
 import plus.myj.nfb.entity.Chapter;
 import plus.myj.nfb.entity.FileFormat;
@@ -23,6 +24,7 @@ public class Nfb {
         fileFormat2BuilderMap.put(FileFormat.FB2, Fb2Builder.builder);
         fileFormat2BuilderMap.put(FileFormat.FB2ZIP, Fb2ZipBuilder.builder);
         fileFormat2BuilderMap.put(FileFormat.TXT, TxtBuilder.builder);
+        fileFormat2BuilderMap.put(FileFormat.MarkDown, MarkDownBuilder.builder);
     }
 
     public static byte[] build(Novel novel, FileFormat format) throws Exception {

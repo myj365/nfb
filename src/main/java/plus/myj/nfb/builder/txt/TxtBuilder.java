@@ -68,15 +68,4 @@ public enum TxtBuilder implements Builder {
             joiner.add("\n");
         }
     }
-
-//    private static void createSubSubChapters(StringJoiner joiner, List<SubSubChapter> subSubChapters, String parentTitle) {
-//        for (SubSubChapter subSubChapter : subSubChapters) {
-//            joiner.add(parentTitle + " " + subSubChapter.getTitle());
-//
-//            if (subSubChapter.getContents() != null) {
-//                subSubChapter.getContents().forEach(joiner::add);
-//            }
-//            joiner.add("");
-//        }
-//    }
 }

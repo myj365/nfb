@@ -7,6 +7,7 @@ public enum FileFormat {
     /** 该格式即经过zip压缩的fb2文件，可有效降低文件大小，但支持的阅读器有限 */
     FB2ZIP("fb2.zip"),
     TXT("txt"),
+    MarkDown("md"),
     ;
 
     /**
