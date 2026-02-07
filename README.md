@@ -1,62 +1,126 @@
+
+
 # nfb
 
-#### 介绍
-这是一个用来生成各种电子书格式的库。生成的电子书中之包含简单内容，不含复杂内容。
+## 介绍
 
-nfb是novel file builder的简写，就是小说文件构建器。
-使用本项目生成的电子书文件都是严格符合标准的。
+nfb（Novel File Builder）是一个用于生成各种电子书格式的Java库。该项目专注于生成包含简单内容的电子书，不支持复杂内容格式。所有生成的电子书文件都严格符合相应的标准规范。
 
-#### 软件架构
-maven项目
+## 软件架构
 
+本项目采用Maven构建，使用Builder设计模式实现多种电子书格式的生成：
 
-#### 安装教程
+- **核心入口**：`Nfb`类作为主入口类，负责调度不同的格式构建器
+- **实体类**：`Novel`、`Chapter`、`FileFormat`、`ImageType`等核心实体
+- **构建器接口**：`Builder`接口定义统一构建规范
+- **格式构建器**：分别实现EPUB2、EPUB3、FB2、FB2ZIP、TXT、MarkDown六种格式
+- **工具类**：`StrUtil`提供字符串处理，`ZipUtil`处理文件压缩
 
-1.  `cd nfb`
-2.  `mvn clean install`
+## 安装教程
 
-#### 使用说明
+```bash
+cd nfb
+mvn clean install
+```
 
-1.  `plus.myj.nfb.entity.Nfb`是入口类，调用时需提供一个`plus.myj.nfb.entity.Novel`对象和`plus.myj.nfb.entity.FileFormat`对象。
-2. 电子书的各种信息请自行参看`Novel`对象的各个字段。
-3. 本项目生成的电子书支持多级目录，最多支持5层，超过会报错。
-4. `Novel`对象包含电子书内容，`FileFormat`对象用于指定生成的电子书格式，可参考测试类`plus.myj.nfb.BuildTest`
+## 使用说明
 
-#### 支持的文件类型
+### 基本用法
 
-- `EPUB2`: 常用的电子书格式，epub的2标准，后缀名为.epub，支持目录和封面
-- `EPUB3`: 常用的电子书格式，epub的3标准，后缀名为.epub，支持目录和封面
-- `FB2`: 一种基于XML的开源结构化电子书格式，后缀名为.fb2，支持目录和封面
-- `FB2ZIP`: `FB2`文件的压缩包格式，支持的阅读器更少，后缀名为.fb2.zip，支持目录和封面
-- `TXT`: 文本文件，后缀名为.txt，不支持目录和封面
-- `MarkDown`: 一种一种轻量级纯文本标记语言，后缀名为.md，支持目录和封面
+1. 创建`Novel`对象，设置电子书基本信息（书名、作者、类型、简介、封面等）
+2. 准备`Chapter`列表，设置章节内容和子章节
+3. 调用`Nfb.build(novel, format)`方法生成电子书
 
-#### 校验
+```java
+// 创建电子书对象
+Novel novel = new Novel();
+novel.setName("电子书名称");
+novel.setAuthor("作者名");
+novel.setLanguage("zh-CN");
+novel.setCoverImage(coverImageBytes);
+novel.setCoverImageType(ImageType.JPEG);
+novel.setPublisher("出版社");
+novel.setType("小说类型");
+novel.setDescription("简介");
 
-- 生成的`epub`和`fb2`文件可以校验是否符合标准
-- 测试类`plus.myj.nfb.BuildTest`用于校验生成`fb2`文件是否符合标准
-- `epub2`和`epub3`的校验需自行下载，链接为`https://github.com/w3c/epubcheck/releases/download/v5.3.0/epubcheck-5.3.0.zip`
-- `epub`文件的校验命令示例`java -jar epubcheck.jar <待校验的epub文件名>`，`epubcheck.jar`会自行检查时`epub2`还是`epub3`
+// 创建章节
+List<Chapter> chapters = new ArrayList<>();
+Chapter chapter = new Chapter();
+chapter.setTitle("第一章");
+chapter.setContents(Arrays.asList("章节内容1", "章节内容2"));
+chapters.add(chapter);
+novel.setChapters(chapters);
 
-#### 其他说明
+// 生成电子书
+byte[] epubBytes = Nfb.build(novel, FileFormat.EPUB2);
+```
 
-- 现在生成的`fb2`文件 ~~不包含~~ **已支持** 封面，且标准规定章节内容与子章节不能同时存在，生成时同时存在会报错。
-- `epub`格式支持章节内容与子章节同时存在
-- `txt`格式没有封面，没有目录。不过有的阅读器可以自行解读出目录
+### 目录深度限制
 
-#### 参与贡献
+- 支持最多5级目录结构
+- 超过5级会抛出异常
+- FB2格式要求章节内容与子章节不能同时存在
 
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
+## 支持的文件类型
 
+| 格式 | 说明 | 文件扩展名 | 目录支持 | 封面支持 |
+|------|------|-----------|---------|---------|
+| EPUB2 | EPUB 2.0标准电子书 | .epub | ✓ | ✓ |
+| EPUB3 | EPUB 3.0标准电子书 | .epub | ✓ | ✓ |
+| FB2 | FictionBook开源电子书格式 | .fb2 | ✓ | ✓ |
+| FB2ZIP | FB2压缩包格式 | .fb2.zip | ✓ | ✓ |
+| TXT | 纯文本文件 | .txt | ✗ | ✗ |
+| MarkDown | 轻量级标记语言 | .md | ✓ | ✓ |
 
-#### 特技
+## 校验说明
 
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+生成的EPUB和FB2文件可进行标准校验：
+
+- **FB2校验**：使用测试类`plus.myj.nfb.Fb2ValidateTest`进行XSD校验
+- **EPUB校验**：下载EPUBCheck工具
+  ```bash
+  java -jar epubcheck.jar <待校验的epub文件名>
+  ```
+
+EPUBCheck下载地址：https://github.com/w3c/epubcheck/releases/download/v5.3.0/epubcheck-5.3.0.zip
+
+## 其他说明
+
+- **FB2格式**：已支持封面图片；标准规定章节内容与子章节不能同时存在
+- **EPUB格式**：支持章节内容与子章节同时存在
+- **TXT格式**：无封面无目录，部分阅读器可自动识别目录结构
+
+## 项目结构
+
+```
+nfb/
+├── src/main/java/plus/myj/nfb/
+│   ├── Nfb.java                    # 主入口类
+│   ├── builder/                    # 构建器接口和实现
+│   │   ├── Builder.java
+│   │   ├── entity/
+│   │   │   ├── DepthLevel.java
+│   │   │   └── EpubItem.java
+│   │   ├── epub2/                  # EPUB2构建器
+│   │   ├── epub3/                  # EPUB3构建器
+│   │   ├── fb2/                    # FB2构建器
+│   │   ├── fb2zip/                 # FB2ZIP构建器
+│   │   ├── markdown/               # MarkDown构建器
+│   │   └── txt/                    # TXT构建器
+│   ├── entity/                     # 核心实体类
+│   │   ├── Novel.java
+│   │   ├── Chapter.java
+│   │   ├── FileFormat.java
+│   │   └── ImageType.java
+│   └── util/                       # 工具类
+│       ├── StrUtil.java
+│       └── ZipUtil.java
+└── src/test/                       # 测试代码和资源
+```
+
+## 参与贡献
+
+1. Fork本仓库
+2. 新建Feat_xxx分支
+3. 提交代码
+4. 新建Pull Request
